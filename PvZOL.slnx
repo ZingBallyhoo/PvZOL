@@ -3,5 +3,7 @@
     <Project Path="ArcticFox/ArcticFox.Codec/ArcticFox.Codec.csproj" />
     <Project Path="ArcticFox/ArcticFox.Net/ArcticFox.Net.csproj" />
   </Folder>
+  <Project Path="PvZOL.Cmd/PvZOL.Cmd.csproj" />
+  <Project Path="PvZOL.CmdDumper/PvZOL.CmdDumper.csproj" />
   <Project Path="PvZOL.Server/PvZOL.Server.csproj" />
 </Solution>
