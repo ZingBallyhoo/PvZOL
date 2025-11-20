@@ -6,6 +6,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ArcticFox\ArcticFox.Net\ArcticFox.Net.csproj" />
+      <ProjectReference Include="..\PvZOL.GameServer\PvZOL.GameServer.csproj" />
     </ItemGroup>
 </Project>

@@ -75,11 +75,11 @@ namespace PvZOL.CmdDumper
         public string Emit()
         {
             var writer = new IndentedTextWriter(new StringWriter());
-            writer.WriteLine("namespace PvZOL.Cmd.Gen.Types;");
+            writer.WriteLine("namespace PvZOL.Protocol.Cmd.Types;");
             writer.WriteLine();
             
             writer.WriteLine("[ProtoContract]");
-            writer.WriteLine($"public class {m_typeName}");
+            writer.WriteLine($"public record {m_typeName}");
             writer.WriteLine("{");
             writer.Indent++;
 

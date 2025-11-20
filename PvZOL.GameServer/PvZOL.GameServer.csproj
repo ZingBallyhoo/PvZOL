@@ -7,11 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Gen\" />
+        <ProjectReference Include="..\ArcticFox\ArcticFox.Net\ArcticFox.Net.csproj" />
+        <ProjectReference Include="..\PvZOL.Protocol\PvZOL.Protocol.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="protobuf-net" Version="3.2.56" />
+      <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.0" />
     </ItemGroup>
 
 </Project>

@@ -66,7 +66,7 @@ namespace PvZOL.CmdDumper
         public string Emit()
         {
             var writer = new IndentedTextWriter(new StringWriter());
-            writer.WriteLine("namespace PvZOL.Cmd.Gen.Enums;");
+            writer.WriteLine("namespace PvZOL.Protocol.Cmd.Enums;");
             writer.WriteLine();
             
             writer.WriteLine($"public enum {m_typeName}");
