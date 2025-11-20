@@ -1,0 +1,7 @@
+﻿<Solution>
+  <Folder Name="/Lib/">
+    <Project Path="ArcticFox/ArcticFox.Codec/ArcticFox.Codec.csproj" />
+    <Project Path="ArcticFox/ArcticFox.Net/ArcticFox.Net.csproj" />
+  </Folder>
+  <Project Path="PvZOL.Server/PvZOL.Server.csproj" />
+</Solution>
