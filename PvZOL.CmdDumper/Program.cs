@@ -1,6 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using PvZOL.CmdDumper;
 
 internal static class Program
@@ -38,6 +36,12 @@ internal static class Program
     {
         var pvzDir = Path.Combine(ffdecOutDir, "scripts", "PVZ");
 
+        var outputDir = Path.Combine("output");
+        var typesOutputDir = Path.Combine(outputDir, "Types");
+        var enumsOutputDir = Path.Combine(outputDir, "Enums");
+        Directory.CreateDirectory(typesOutputDir);
+        Directory.CreateDirectory(enumsOutputDir);
+
         //var sourceFilePath = Path.Combine(pvzDir, "Cmd", "CmdCommon.as");
         foreach (var sourceFilePath in Directory.EnumerateFiles(pvzDir, "*.as", SearchOption.AllDirectories))
         {
@@ -56,12 +60,19 @@ internal static class Program
         
                 var pbType = new ProtoType(sourceFileName);
                 pbType.DecompileFields(sourceFile);
-                Console.Out.WriteLine(pbType.Emit());
+
+                var csSource = pbType.Emit();
+                await File.WriteAllTextAsync(Path.Combine(typesOutputDir, $"{pbType.m_typeName}.cs"), csSource);
+                continue;
             }
-    
-            //throw new InvalidDataException("isn't a message");
-    
-            // todo: assume this is an enum..
+            
+            // assume this is an enum..
+
+            var pbEnum = new ProtoEnum(sourceFileName);
+            pbEnum.DecompileFields(sourceFile);
+
+            var enumCsSource = pbEnum.Emit();
+            await File.WriteAllTextAsync(Path.Combine(enumsOutputDir, $"{pbEnum.m_typeName}.cs"), enumCsSource);
         }
     }
 }

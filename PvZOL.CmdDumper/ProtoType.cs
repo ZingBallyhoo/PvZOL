@@ -56,7 +56,7 @@ namespace PvZOL.CmdDumper
                     "DOUBLE" => "double",
                     "STRING" => "string",
                     "BYTES" => "byte[]",
-                    "MESSAGE" => ctorParamsList[3],
+                    "MESSAGE" => ctorParamsList[3].Split('.').Last(), // (sometimes fully qualified)
                     "ENUM" => ctorParamsList[3],
                     _ => throw new NotImplementedException($"unknown as type: {dataType}")
                 };
@@ -76,6 +76,7 @@ namespace PvZOL.CmdDumper
         {
             var writer = new IndentedTextWriter(new StringWriter());
             writer.WriteLine("namespace PvZOL.Cmd.Gen.Types;");
+            writer.WriteLine();
             
             writer.WriteLine("[ProtoContract]");
             writer.WriteLine($"public class {m_typeName}");

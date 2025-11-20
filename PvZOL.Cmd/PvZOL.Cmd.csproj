@@ -10,4 +10,8 @@
       <Folder Include="Gen\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="protobuf-net" Version="3.2.56" />
+    </ItemGroup>
+
 </Project>
