@@ -12,6 +12,15 @@ namespace PvZOL.GameServer
 {
     public class PvzSocket : HighLevelSocket, ISpanConsumer<byte>
     {
+        private static readonly RuntimeTypeModel PvzTypeModel;
+
+        static PvzSocket()
+        {
+            PvzTypeModel = RuntimeTypeModel.Create();
+            // the as3 impl assumes anything unspecified is null
+            PvzTypeModel.UseImplicitZeroDefaults = false;
+        }
+        
         public PvzSocket(SocketInterface socket) : base(socket)
         {
             m_netInputCodec = new CodecChain()
@@ -36,11 +45,12 @@ namespace PvZOL.GameServer
                 decryptedBody[i] ^= 7;
             }
             
-            var common = Serializer.Deserialize<CmdCommon>(decryptedBody);
-            Console.Out.WriteLine(common);
+            var common = PvzTypeModel.Deserialize<CmdCommon>(decryptedBody);
             
             var cmd = CmdFactory.CreateMessage(common.m_cmdName);
-            RuntimeTypeModel.Default.Deserialize(cmd.GetType(), common.m_cmdData, cmd);
+            PvzTypeModel.Deserialize(cmd.GetType(), common.m_cmdData, cmd);
+            
+            Console.Out.WriteLine(cmd);
 
             if (cmd is Cmd_CheckOldUser_CS)
             {
@@ -148,7 +158,7 @@ namespace PvZOL.GameServer
         private ValueTask Send(object cmd)
         {
             var cmdStream = new MemoryStream();
-            RuntimeTypeModel.Default.Serialize(cmdStream, cmd);
+            PvzTypeModel.Serialize(cmdStream, cmd);
             cmdStream.Flush();
             
             var cmdCommon = new CmdCommon
@@ -159,7 +169,7 @@ namespace PvZOL.GameServer
             };
 
             var cmdCommonStream = new MemoryStream();
-            Serializer.Serialize(cmdCommonStream, cmdCommon);
+            PvzTypeModel.Serialize(cmdCommonStream, cmdCommon);
             cmdCommonStream.Flush();
 
             var pkg = new TWebPvzPkg

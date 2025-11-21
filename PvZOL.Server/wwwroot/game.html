@@ -38,10 +38,8 @@ html, body, #flashdiv{
 		// https://github.com/swfobject/swfobject/issues/57
 		swfobject.ua.pv = [100, 0, 0];
 		
-		//if(!isStage3D()){
-		//	return flashStage3dUrl;
-		//}
-		return flashClassicUrl;
+		return flashStage3dUrl; // less broken (fails to clear after leaving game)
+		return flashClassicUrl; // broken tile graphics
 	}
 	
 	
