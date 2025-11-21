@@ -29,10 +29,11 @@ namespace PvZOL.Server
                 return new NotFoundFileInfo(subpath);
             }
 
-            return m_inner.GetFileInfo($"{match.Groups[1].ValueSpan}.swf");
+            var extension = Path.GetExtension(subpath);
+            return m_inner.GetFileInfo($"{match.Groups[1].ValueSpan}{extension}");
         }
 
-        [GeneratedRegex("^(.*)_[a-f0-9]{32}\\.swf$")]
+        [GeneratedRegex("^(.*)_[a-f0-9]{32}\\.(?:swf|bl|bbone)$")]
         private partial Regex s_md5Regex { get; }
 
         public IChangeToken Watch(string filter)

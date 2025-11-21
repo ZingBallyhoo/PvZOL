@@ -20,5 +20,15 @@ namespace PvZOL.Protocol.TConnD
             
             SKey = Encoding.UTF8.GetString(sKeyBytes);
         }
+
+        public void Write(ref GrowingBitWriter writer)
+        {
+            writer.WriteUInt32BigEndian(Uin);
+
+            var encoded = Encoding.UTF8.GetBytes(SKey); // todo: remove alloc :))
+            writer.WriteInt32BigEndian(encoded.Length+1);
+            writer.WriteBytes(encoded);
+            writer.WriteByte(0);
+        }
     }
 }

@@ -18,5 +18,22 @@ namespace PvZOL.Protocol.TConnD
             Ext.Read(ref reader, Head.Cmd);
             Body = reader.ReadBytes(checked((int)Head.BodyLen));
         }
+
+        public void Write(ref GrowingBitWriter writer)
+        {
+            var pkgStart = writer.m_dataOffset;
+            
+            Head.Write(ref writer);
+            Ext.Write(ref writer, Head.Cmd);
+            writer.WriteBytes(Body);
+
+            // meh
+            var pkgEnd = writer.m_dataOffset;
+            Head.PkgLen = checked((uint)(writer.m_dataOffset - pkgStart));
+            Head.BodyLen = checked((uint)Body.Length);
+            writer.SeekByte((uint)pkgStart);
+            Head.Write(ref writer);
+            writer.SeekByte((uint)pkgEnd);
+        }
     }
 }
