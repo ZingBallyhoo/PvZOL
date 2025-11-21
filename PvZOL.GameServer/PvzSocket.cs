@@ -96,7 +96,10 @@ namespace PvZOL.GameServer
             });
             else if (cmd is Cmd_Battle_GetFormation_CS) EnqueueSend(new Cmd_Battle_GetFormation_SC
             {
-                m_formation = new Dto_FormationInfo()
+                m_team = new List<Dto_FormationInfo>
+                {
+                    new Dto_FormationInfo()
+                }
             });
             else if (cmd is Cmd_RoleGuildInfo_CS) EnqueueSend(new Cmd_RoleGuildInfo_SC
             {
@@ -112,6 +115,13 @@ namespace PvZOL.GameServer
                 m_stageId = infoRequest.m_stageId,
                 m_levelId = infoRequest.m_levelId,
                 m_subLevelId = infoRequest.m_subLevelId
+            });
+            else if (cmd is Cmd_TD_PrivilegeInfo_CS privilegeRequest) EnqueueSend(new Cmd_TD_PrivilegeInfo_SC
+            {
+                m_stageId = privilegeRequest.m_stageId,
+                m_levelId = privilegeRequest.m_levelId,
+                m_subLevelId = privilegeRequest.m_subLevelId,
+                m_hasPrivilege = true
             });
             
             // let's just respond to everything so we can boot
@@ -145,7 +155,6 @@ namespace PvZOL.GameServer
             else if (cmd is Cmd_FlexibleActivity_GetActivityList_CS) EnqueueSend(new Cmd_FlexibleActivity_GetActivityList_SC());
             else if (cmd is Cmd_Guide_GetKeys_CS) EnqueueSend(new Cmd_Guide_GetKeys_SC());
             else if (cmd is Cmd_SecondPwd_Info_CS) EnqueueSend(new Cmd_SecondPwd_Info_SC());
-            else if (cmd is Cmd_TD_PrivilegeInfo_CS) EnqueueSend(new Cmd_TD_PrivilegeInfo_SC());
             else if (cmd is Cmd_Notice_GetRollList_CS) EnqueueSend(new Cmd_Notice_GetRollList_SC());
             else if (cmd is Cmd_Notice_GetSysList_CS) EnqueueSend(new Cmd_Notice_GetSysList_SC());
         }
