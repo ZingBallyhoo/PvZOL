@@ -3,6 +3,8 @@ using ArcticFox.Codec.Binary;
 using ArcticFox.Net;
 using ArcticFox.Net.Sockets;
 using ProtoBuf;
+using ProtoBuf.Meta;
+using PvZOL.Protocol.Cmd;
 using PvZOL.Protocol.Cmd.Types;
 using PvZOL.Protocol.TConnD;
 
@@ -37,7 +39,10 @@ namespace PvZOL.GameServer
             var common = Serializer.Deserialize<CmdCommon>(decryptedBody);
             Console.Out.WriteLine(common);
             
-            // todo: map cmd name -> type, deserialize, dispatch
+            var cmd = CmdFactory.CreateMessage(common.m_cmdName);
+            RuntimeTypeModel.Default.Deserialize(cmd.GetType(), common.m_cmdData, cmd);
+            
+            Console.Out.WriteLine(cmd);
         }
 
         public void Abort()

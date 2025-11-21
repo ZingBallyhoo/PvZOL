@@ -3,14 +3,26 @@ using System.Text.RegularExpressions;
 
 namespace PvZOL.CmdDumper
 {
-    public record ProtoType(string m_typeName)
+    public partial record ProtoType
     {
-        public List<ProtoField> m_fields = new List<ProtoField>();
+        public readonly string m_typeName;
+        public string? m_messageID;
+        public readonly List<ProtoField> m_fields = new List<ProtoField>();
+
+        public ProtoType(string typeName)
+        {
+            m_typeName = typeName;
+        }
         
         public void DecompileFields(string source)
         {
-            var reader = new StringReader(source);
+            var messageIDMatch = MessageIDRegex().Match(source);
+            if (messageIDMatch.Success)
+            {
+                m_messageID = messageIDMatch.Groups[1].Value;
+            }
             
+            var reader = new StringReader(source);
             while (reader.ReadLine() is { } line)
             {
                 if (!line.Contains("public static const ") || !line.Contains("FieldDescriptor"))
@@ -105,6 +117,9 @@ namespace PvZOL.CmdDumper
 
             return writer.InnerWriter.ToString()!;
         }
+
+        [GeneratedRegex("public static const \\$MessageID:String = \"([^\"]*)\";")]
+        private static partial Regex MessageIDRegex();
     }
 
     public record ProtoField(string m_name, int m_number, string m_elementType, bool m_isRepeated);

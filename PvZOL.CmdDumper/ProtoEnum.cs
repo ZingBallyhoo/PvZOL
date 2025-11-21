@@ -6,7 +6,7 @@ namespace PvZOL.CmdDumper
     public record ProtoEnum
     {
         public readonly string m_typeName;
-        public List<ProtoEnumValue> m_values = new List<ProtoEnumValue>();
+        public readonly List<ProtoEnumValue> m_values = new List<ProtoEnumValue>();
 
         public ProtoEnum(string typeName)
         {

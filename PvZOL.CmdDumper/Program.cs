@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.CodeDom.Compiler;
+using System.Diagnostics;
 using PvZOL.CmdDumper;
 
 internal static class Program
@@ -42,6 +43,8 @@ internal static class Program
         Directory.CreateDirectory(typesOutputDir);
         Directory.CreateDirectory(enumsOutputDir);
 
+        var messageIDs = new Dictionary<string, string>();
+
         //var sourceFilePath = Path.Combine(pvzDir, "Cmd", "CmdCommon.as");
         foreach (var sourceFilePath in Directory.EnumerateFiles(pvzDir, "*.as", SearchOption.AllDirectories))
         {
@@ -55,25 +58,61 @@ internal static class Program
             var sourceFile = await File.ReadAllTextAsync(sourceFilePath);
             if (sourceFile.Contains("extends Message"))
             {
-                // todo: message id regex: `public static const \$MessageID:String = "([^"]*)";`
-                // needed for wire
-        
                 var pbType = new ProtoType(sourceFileName);
                 pbType.DecompileFields(sourceFile);
 
                 var csSource = pbType.Emit();
                 await File.WriteAllTextAsync(Path.Combine(typesOutputDir, $"{pbType.m_typeName}.cs"), csSource);
+
+                if (pbType.m_messageID != null)
+                {
+                    messageIDs.Add(pbType.m_messageID, pbType.m_typeName);
+                }
                 continue;
             }
             
-            // assume this is an enum..
-
+            // assume this is an enum...
             var pbEnum = new ProtoEnum(sourceFileName);
             pbEnum.DecompileFields(sourceFile);
 
             var enumCsSource = pbEnum.Emit();
             await File.WriteAllTextAsync(Path.Combine(enumsOutputDir, $"{pbEnum.m_typeName}.cs"), enumCsSource);
         }
+
+        await File.WriteAllTextAsync(Path.Combine(outputDir, "CmdFactory.cs"), EmitCmdFactory(messageIDs));
+    }
+
+    private static string EmitCmdFactory(Dictionary<string, string> messageIDs)
+    {
+        var writer = new IndentedTextWriter(new StringWriter());
+        writer.WriteLine("namespace PvZOL.Protocol.Cmd;");
+        writer.WriteLine("");
+        writer.WriteLine("public static class CmdFactory");
+        writer.WriteLine("{");
+        writer.Indent++;
+        
+        writer.WriteLine("public static object CreateMessage(string messageID)");
+        writer.WriteLine("{");
+        writer.Indent++;
+        
+        writer.WriteLine("return messageID switch");
+        writer.WriteLine("{");
+        writer.Indent++;
+        foreach (var pair in messageIDs.OrderBy(x => x.Key))
+        {
+            writer.WriteLine($"\"{pair.Key}\" => new {pair.Value}(),");
+        }
+        writer.WriteLine("_ => throw new InvalidDataException($\"unknown message id: {messageID}\")");
+        writer.Indent--;
+        writer.WriteLine("};"); // switch
+        
+        writer.Indent--;
+        writer.WriteLine("}"); // method
+        
+        writer.Indent--;
+        writer.WriteLine("}"); // class
+
+        return writer.InnerWriter.ToString()!;
     }
 }
 
