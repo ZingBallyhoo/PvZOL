@@ -8,8 +8,16 @@ namespace PvZOL.GameServer
         private readonly FixedSizeHeader<byte> m_header = new FixedSizeHeader<byte>(5);
         private readonly SizeBufferer<byte> m_body = new SizeBufferer<byte>();
         
+        public static ReadOnlySpan<byte> s_policyFileRequest => "<policy-file-request/>\0"u8;
+        
         public override void Input(ReadOnlySpan<byte> input, ref object? state)
         {
+            if (input.SequenceEqual(s_policyFileRequest))
+            {
+                CodecOutput(input, ref state);
+                return;
+            }
+            
             while (input.Length > 0)
             {
                 if (m_header.ConsumeAndGet(ref input, out var header))

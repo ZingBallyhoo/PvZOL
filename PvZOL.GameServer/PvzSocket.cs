@@ -30,6 +30,13 @@ namespace PvZOL.GameServer
 
         public void Input(ReadOnlySpan<byte> input, ref object? state)
         {
+            if (input.SequenceEqual(PvzBufferCodec.s_policyFileRequest))
+            {
+                // todo: ew
+                this.BroadcastZeroTerminatedAscii("<cross-domain-policy><allow-access-from domain='*' to-ports='8001' /></cross-domain-policy>");
+                return;
+            }
+            
             var pkgReader = new BitReader(input);
             var pkg = new TWebPvzPkg();
             pkg.Read(ref pkgReader);
