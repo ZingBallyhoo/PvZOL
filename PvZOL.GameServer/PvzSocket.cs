@@ -66,7 +66,7 @@ namespace PvZOL.GameServer
                 {
                     m_latestTDLevel = new Dto_TDLevelInfo
                     {
-                        m_stageId = 0,
+                        m_stageId = 1,
                         m_levelId = 1,
                         m_subLevelId = 1
                     },
@@ -122,6 +122,40 @@ namespace PvZOL.GameServer
                 m_levelId = privilegeRequest.m_levelId,
                 m_subLevelId = privilegeRequest.m_subLevelId,
                 m_hasPrivilege = true
+            });
+            else if (cmd is Cmd_TD_GetStageInfo_CS stageInfo) EnqueueSend(new Cmd_TD_GetStageInfo_SC
+            {
+                m_stageId = stageInfo.m_stageId,
+                m_levelInfoList = new List<Dto_TD_LevelInfo>
+                {
+                    // beaten levels...?
+                    // level 6 isn't here but 7 is, therefore 6 is playable? idk
+                    new Dto_TD_LevelInfo
+                    {
+                        m_levelId = 1,
+                        m_subLevelId = 1
+                    },
+                    new Dto_TD_LevelInfo
+                    {
+                        m_levelId = 3,
+                        m_subLevelId = 1
+                    },
+                    new Dto_TD_LevelInfo
+                    {
+                        m_levelId = 5,
+                        m_subLevelId = 1
+                    },
+                    new Dto_TD_LevelInfo
+                    {
+                        m_levelId = 7,
+                        m_subLevelId = 1
+                    },
+                    new Dto_TD_LevelInfo
+                    {
+                        m_levelId = 10,
+                        m_subLevelId = 1
+                    }
+                }
             });
             
             // let's just respond to everything so we can boot
