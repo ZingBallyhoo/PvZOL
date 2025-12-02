@@ -1,7 +1,7 @@
 ﻿using System.CodeDom.Compiler;
 using System.Text.RegularExpressions;
 
-namespace PvZOL.CmdDumper
+namespace PvZOL.Tools.CmdDumper
 {
     public partial record ProtoType
     {

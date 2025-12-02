@@ -1,6 +1,6 @@
 ﻿using System.CodeDom.Compiler;
 using System.Diagnostics;
-using PvZOL.CmdDumper;
+using PvZOL.Tools.CmdDumper;
 
 internal static class Program
 {
