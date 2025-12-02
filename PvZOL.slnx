@@ -6,5 +6,6 @@
   <Project Path="PvZOL.GameServer/PvZOL.GameServer.csproj" />
   <Project Path="PvZOL.Protocol/PvZOL.Protocol.csproj" />
   <Project Path="PvZOL.Server/PvZOL.Server.csproj" />
+  <Project Path="PvZOL.Tools.ClientDecompiler/PvZOL.Tools.ClientDecompiler.csproj" />
   <Project Path="PvZOL.Tools.CmdDumper/PvZOL.Tools.CmdDumper.csproj" />
 </Solution>
